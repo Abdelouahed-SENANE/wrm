@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: WRM
+  datasource:
+    url: jdbc:mysql://mysql:3306/wrm
+    username: root
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    open-in-view: false
