@@ -1,0 +1,22 @@
+# Ignore the target directory (Maven build output)
+target/
+
+# Ignore IDE files
+.idea/
+*.iml
+*.mvn
+
+# Ignore log files
+*.log
+
+# Ignore temporary files
+*.tmp
+*.temp
+
+# Ignore version control directories
+.git/
+.gitignore
+
+# Ignore any other files or directories you don't need in the image
+*.class
+*.jar
