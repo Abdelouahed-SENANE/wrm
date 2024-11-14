@@ -14,7 +14,7 @@ public abstract class Response {
 
     public static ResponseEntity<SuccessDTO> success(int status, String message, String key, Page<?> items) {
         Map<String, Object> payload = new HashMap<>();
-        payload.put(key, items.getContent());
+
         PageDTO pageDTO = new PageDTO(
                 items.getTotalElements(),
                 items.getTotalPages(),
@@ -23,17 +23,19 @@ public abstract class Response {
                 items.hasPrevious(),
                 items.hasNext()
         );
-        return ResponseEntity.status(status).body(new SuccessDTO(LocalDateTime.now() ,status, message, payload, pageDTO));
+        payload.put(key, items.getContent());
+        payload.put("pagination" , pageDTO);
+        return ResponseEntity.status(status).body(new SuccessDTO(LocalDateTime.now() ,status, message, payload));
     }
 
     public static ResponseEntity<SuccessDTO> success(int status, String message, String key, Object value) {
         Map<String, Object> payload = new HashMap<>();
         payload.put(key, value);
-        return ResponseEntity.status(status).body(new SuccessDTO(LocalDateTime.now() , status, message, payload, null));
+        return ResponseEntity.status(status).body(new SuccessDTO(LocalDateTime.now() , status, message, payload));
     }
 
     public static ResponseEntity<SuccessDTO> success(int status, String message) {
-        return ResponseEntity.status(status).body(new SuccessDTO(LocalDateTime.now() ,status, message, null, null));
+        return ResponseEntity.status(status).body(new SuccessDTO(LocalDateTime.now() ,status, message, null));
     }
 
     public static ResponseEntity<ErrorDTO> error(int status, String message) {

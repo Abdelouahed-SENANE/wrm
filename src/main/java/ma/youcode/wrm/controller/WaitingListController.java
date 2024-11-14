@@ -1,18 +1,16 @@
 package ma.youcode.wrm.controller;
 
 import jakarta.validation.Valid;
-import ma.youcode.wrm.dto.request.WaitingListRequestDTO;
+import ma.youcode.wrm.dto.request.waitingList.WaitingListCreateDTO;
 import ma.youcode.wrm.dto.SuccessDTO;
-import ma.youcode.wrm.dto.response.WaitingListResponseDTO;
-import ma.youcode.wrm.entities.WaitingList;
+import ma.youcode.wrm.dto.request.waitingList.WaitingListUpdateDTO;
+import ma.youcode.wrm.dto.response.waitingList.WaitingListResponseDTO;
 import ma.youcode.wrm.services.interfaces.WaitingListService;
 import ma.youcode.wrm.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 
 @RestController
@@ -22,7 +20,7 @@ public class WaitingListController {
     @Autowired
     private WaitingListService service;
 
-    @GetMapping("/get/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<SuccessDTO> getWaitingList(@PathVariable Long id) {
         WaitingListResponseDTO responseDTO = service.read(id);
         return Response.success(200 , "waiting list has been successfully retrieved." , "waiting-list" , responseDTO);
@@ -35,12 +33,12 @@ public class WaitingListController {
     }
 
     @PostMapping("/new")
-    public ResponseEntity<SuccessDTO> addNewWaitingList(@Valid @RequestBody WaitingListRequestDTO requestDTO) {
+    public ResponseEntity<SuccessDTO> addNewWaitingList(@Valid @RequestBody WaitingListCreateDTO requestDTO) {
         WaitingListResponseDTO responseDTO = service.create(requestDTO);
         return Response.success(201 , "Waiting list has been successfully created." , "waiting-list" , responseDTO);
     }
     @PutMapping("/edit/{id}")
-    public ResponseEntity<SuccessDTO> editWaitingList(@Valid @RequestBody WaitingListRequestDTO requestDTO , @PathVariable Long id) {
+    public ResponseEntity<SuccessDTO> editWaitingList(@Valid @RequestBody WaitingListUpdateDTO requestDTO , @PathVariable Long id) {
         WaitingListResponseDTO responseDTO = service.update(requestDTO , id);
         return Response.success(200 , "Waiting list has been successfully updated." , "waiting-list" , responseDTO);
     }

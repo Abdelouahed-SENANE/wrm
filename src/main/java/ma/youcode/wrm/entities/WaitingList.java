@@ -22,13 +22,12 @@ public class WaitingList extends BaseEntity {
     private LocalDateTime date;
 
     @Column(name = "capacity")
-    private int capacity;
+    private Integer capacity;
 
     @Column(name = "algorithm_type")
-    private String algorithmType;
+    private String algorithm;
 
-    @Column(name = "algorithm_mode")
-    private String algorithmMode;
+
 
     @OneToMany(mappedBy = "waitingList" , fetch = FetchType.EAGER)
     private List<Visit> visits;

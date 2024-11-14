@@ -11,8 +11,6 @@ services:
       - mysql
     env_file:
       - .env
-    volumes:
-      - ./src:/app/src
     networks:
       - application_network
 

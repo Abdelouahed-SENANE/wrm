@@ -2,9 +2,10 @@ spring:
   application:
     name: WRM
   datasource:
-    url: ${DATABASE_URL}
-    username: ${DATABASE_USERNAME}
-    password: ${DATABASE_PASSWORD}
+    url: jdbc:mysql://mysql:3306/wrm?useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: password
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
@@ -15,7 +16,3 @@ spring:
       enabled: true
     restart:
       enabled: true
-    remote:
-      secret: ${SECRET_KEY}
-      restart:
-        enabled: true

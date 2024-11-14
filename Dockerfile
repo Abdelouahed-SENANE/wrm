@@ -1,22 +1,12 @@
-# Stage 1: Dependency cache
-FROM maven:latest AS dependencies
-WORKDIR /app
-COPY pom.xml .
-RUN mvn dependency:go-offline
+# Use the OpenJDK base image for the runtime environment
+FROM openjdk:17-jdk-slim
 
-# Stage 2: Application build
-FROM dependencies AS builder
-COPY pom.xml .
-COPY src ./src
-RUN mvn clean package -DskipTests
-
-# Stage 3: Runtime environment
-FROM openjdk:17-jdk-alpine
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy the built JAR file from the build stage
-COPY --from=builder /app/target/*.jar wrm.jar
-
-
+COPY target/*.jar wrm.jar
+# Expose the port that the application will run on
 EXPOSE 8080
-ENTRYPOINT ["java", "-Dspring.devtools.remote.secret=${SECRET_KEY}", "-jar", "wrm.jar"]
+
+# Define the command to run the JAR file
+ENTRYPOINT ["java", "-jar", "wrm.jar"]

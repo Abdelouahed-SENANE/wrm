@@ -1,6 +1,3 @@
-# Ignore the target directory (Maven build output)
-target/
-
 # Ignore IDE files
 .idea/
 *.iml

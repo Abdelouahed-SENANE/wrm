@@ -10,6 +10,5 @@ public record SuccessDTO(
         LocalDateTime timestamp,
         int status,
         String message,
-        Map<String, Object> data,
-        PageDTO pageDTO
+        Map<String, Object> data
 ) {}

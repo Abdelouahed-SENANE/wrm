@@ -12,8 +12,4 @@ public class VisitorServiceImpl extends GenericService<Visitor> implements Visit
         super(Visitor.class);
     }
 
-    @Override
-    public void createVisitor() {
-
-    }
 }
