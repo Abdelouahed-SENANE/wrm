@@ -30,8 +30,8 @@ public class Visit extends BaseEntity {
     @Column(name = "priority")
     private int priority;
 
-    @Column(name = "estimated_processed_time")
-    private LocalTime estimatedProcessedTime;
+    @Column(name = "estimated_processing_time")
+    private LocalTime estimatedProcessingTime;
 
     @ManyToOne
     @JoinColumn(name = "visitor_id")

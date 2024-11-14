@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "waiting_list")
+@Table(name = "waitings_list")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -21,11 +21,14 @@ public class WaitingList extends BaseEntity {
     @Column(name = "waiting_date")
     private LocalDateTime date;
 
+    @Column(name = "capacity")
+    private int capacity;
+
     @Column(name = "algorithm_type")
-    private String algorithm;
+    private String algorithmType;
 
     @Column(name = "algorithm_mode")
-    private String mode;
+    private String algorithmMode;
 
     @OneToMany(mappedBy = "waitingList" , fetch = FetchType.EAGER)
     private List<Visit> visits;

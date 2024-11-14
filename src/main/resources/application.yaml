@@ -2,11 +2,20 @@ spring:
   application:
     name: WRM
   datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
     open-in-view: false
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
+    remote:
+      secret: ${SECRET_KEY}
+      restart:
+        enabled: true

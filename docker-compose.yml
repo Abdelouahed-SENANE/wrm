@@ -9,13 +9,10 @@ services:
       - "8080:8080"
     depends_on:
       - mysql
-    environment:
-      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+    env_file:
+      - .env
     volumes:
       - ./src:/app/src
-      - ~/.m2:/root/.m2
     networks:
       - application_network
 
@@ -23,8 +20,8 @@ services:
     container_name: mysql
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
-      MYSQL_DATABASE: ${SPRING_DATASOURCE_NAME}
+      MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD}
+      MYSQL_DATABASE: ${DATABASE_NAME}
     ports:
       - "3306:3306"
     volumes:
