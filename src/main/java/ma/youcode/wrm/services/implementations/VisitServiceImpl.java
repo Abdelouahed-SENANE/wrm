@@ -5,6 +5,7 @@ import ma.youcode.wrm.common.GenericServiceImpl;
 import ma.youcode.wrm.dto.request.visit.VisitCreateDTO;
 import ma.youcode.wrm.dto.request.visit.VisitUpdateDTO;
 import ma.youcode.wrm.dto.response.visit.VisitResponseDTO;
+import ma.youcode.wrm.dto.response.visitor.VisitorResponseDTO;
 import ma.youcode.wrm.entities.Visit;
 import ma.youcode.wrm.entities.Visitor;
 import ma.youcode.wrm.entities.WaitingList;
@@ -15,6 +16,8 @@ import ma.youcode.wrm.services.interfaces.VisitorService;
 import ma.youcode.wrm.services.interfaces.WaitingListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,7 +32,7 @@ public class VisitServiceImpl extends GenericServiceImpl<Visit> implements Visit
     @Autowired
     private VisitorService visitorService;
 
-    public VisitServiceImpl(){
+    public VisitServiceImpl() {
         super(Visit.class);
     }
 
@@ -40,23 +43,39 @@ public class VisitServiceImpl extends GenericServiceImpl<Visit> implements Visit
         WaitingList waitingList = findWaitingList(createDTO.waitingListId());
         Visitor visitor = findVisitor(createDTO.visitorId());
 
-        Visit visit = toVisit(createDTO);
-        validateVisit(visit , waitingList);
+        Visit visit = mapper.fromCreateDTO(createDTO);
+        validateVisit(visit, waitingList);
 
         visit.setVisitor(visitor);
         visit.setWaitingList(waitingList);
 
-        return mapper.toResponseDTO(repository.save(visit));
+        return saveVisit(visit);
     }
 
     @Override
     public void delete(Long id) {
 
+        if (!isExist(id)) {
+            throw new EntityNotFoundException("Visit not found.");
+        }
+
+        repository.deleteById(id);
     }
 
     @Override
-    public VisitResponseDTO update(VisitUpdateDTO requestDTO, Long id) {
-        return null;
+    public VisitResponseDTO update(VisitUpdateDTO updateDTO, Long id) {
+
+        if (!isExist(id)) {
+           throw new EntityNotFoundException("Visit not found.");
+        }
+
+        WaitingList waitingList = findWaitingList(updateDTO.waitingListId());
+
+        Visit visit = mapper.fromUpdateDTO(updateDTO);
+        validateVisit(visit, waitingList);
+        visit.setId(id);
+
+        return saveVisit(visit);
     }
 
 
@@ -67,10 +86,10 @@ public class VisitServiceImpl extends GenericServiceImpl<Visit> implements Visit
 
     @Override
     public Page<VisitResponseDTO> readAll(int page, int size) {
-        return null;
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Visit> visitPage = repository.findAll(pageable);
+        return visitPage.map(mapper::toResponseDTO);
     }
-
-
 
     private WaitingList findWaitingList(Long id) {
         WaitingList waitingList = waitingListService.findById(id);
@@ -90,26 +109,27 @@ public class VisitServiceImpl extends GenericServiceImpl<Visit> implements Visit
         return visitor;
     }
 
-    private Visit toVisit(VisitCreateDTO createDTO) {
-        return mapper.fromCreateDTO(createDTO);
-    }
-
     private void validateVisit(Visit visit, WaitingList waitingList) {
         if (!"FIFO".equals(waitingList.getAlgorithm())) {
             switch (waitingList.getAlgorithm()) {
-                case "PHF" :
-                    if (visit.getPriority() == 0) {
+                case "PHF":
+                    if (visit.getPriority() == null) {
                         throw new IllegalArgumentException("To apply the priority first algorithm, it's mandatory to have the priority value!");
                     }
                     break;
-                case "SJF" :
+                case "SJF":
                     if (visit.getEstimatedProcessingTime() == null) {
                         throw new IllegalArgumentException("To apply algorithm SJF, it's mandatory to have the estimated processing time value!");
                     }
                     break;
 
-                default: throw new IllegalArgumentException("Algorithm not found.");
+                default:
+                    throw new IllegalArgumentException("Algorithm not found.");
             }
         }
+    }
+
+    private VisitResponseDTO saveVisit(Visit visit) {
+        return mapper.toResponseDTO(repository.save(visit));
     }
 }

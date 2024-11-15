@@ -1,5 +1,7 @@
 package ma.youcode.wrm.dto.request.visit;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import ma.youcode.wrm.enums.VisitStatus;
 
@@ -12,10 +14,10 @@ public record VisitUpdateDTO(
         LocalTime startTime,
         LocalTime endTime,
         LocalTime estimatedProcessingTime,
-        int priority,
-        VisitStatus status,
-        Long visitorId,
-        Long waitingListId
+        @Min(0) @Max(255) Integer priority,
+        @NotNull VisitStatus status,
+        @NotNull Long visitorId,
+        @NotNull Long waitingListId
 
 ) implements Serializable {
 
