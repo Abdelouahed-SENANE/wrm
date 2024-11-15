@@ -24,20 +24,21 @@ public class Visit extends BaseEntity {
     @Column(name = "end_time")
     private LocalTime endTime;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "visit_status")
     private VisitStatus status;
 
     @Column(name = "priority")
-    private int priority;
+    private Integer priority;
 
     @Column(name = "estimated_processing_time")
     private LocalTime estimatedProcessingTime;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "visitor_id")
     private Visitor visitor;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "waiting_list_id")
     private WaitingList waitingList;
 

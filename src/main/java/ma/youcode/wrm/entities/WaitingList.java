@@ -27,8 +27,6 @@ public class WaitingList extends BaseEntity {
     @Column(name = "algorithm_type")
     private String algorithm;
 
-
-
     @OneToMany(mappedBy = "waitingList" , fetch = FetchType.EAGER)
     private List<Visit> visits;
 

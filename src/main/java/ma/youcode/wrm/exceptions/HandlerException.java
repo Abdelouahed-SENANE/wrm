@@ -3,6 +3,8 @@ package ma.youcode.wrm.exceptions;
 import jakarta.persistence.EntityNotFoundException;
 import ma.youcode.wrm.dto.ErrorDTO;
 import ma.youcode.wrm.utils.Response;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -10,10 +12,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 @RestControllerAdvice
 public class HandlerException {
-
+    private  final Logger logger = Logger.getLogger("HandlerException");
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDTO> handleGenericException(Exception e) {
         return Response.error(400 , e.getMessage() , null);

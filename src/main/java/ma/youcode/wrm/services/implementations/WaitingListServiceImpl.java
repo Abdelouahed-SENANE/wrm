@@ -1,7 +1,7 @@
 package ma.youcode.wrm.services.implementations;
 
 import jakarta.persistence.EntityNotFoundException;
-import ma.youcode.wrm.common.GenericService;
+import ma.youcode.wrm.common.GenericServiceImpl;
 import ma.youcode.wrm.dto.request.waitingList.WaitingListCreateDTO;
 import ma.youcode.wrm.dto.request.waitingList.WaitingListUpdateDTO;
 import ma.youcode.wrm.dto.response.waitingList.WaitingListResponseDTO;
@@ -9,20 +9,23 @@ import ma.youcode.wrm.entities.WaitingList;
 import ma.youcode.wrm.mappers.WaitingListMapper;
 import ma.youcode.wrm.repositories.WaitingListRepository;
 import ma.youcode.wrm.services.interfaces.WaitingListService;
-import ma.youcode.wrm.utils.DefaultHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class WaitingListServiceImpl extends GenericService<WaitingList> implements WaitingListService {
+public class WaitingListServiceImpl extends GenericServiceImpl<WaitingList> implements WaitingListService {
 
     @Autowired
     private WaitingListMapper mapper;
     @Autowired
     private WaitingListRepository repository;
+
+    @Autowired
+    private Environment env;
 
     public WaitingListServiceImpl() {
         super(WaitingList.class);
@@ -33,7 +36,14 @@ public class WaitingListServiceImpl extends GenericService<WaitingList> implemen
     public WaitingListResponseDTO create(WaitingListCreateDTO requestDTO) {
 
         WaitingList waitingList = mapper.fromCreateDTO(requestDTO);
-        DefaultHandler.waitingListDefaults(waitingList);
+
+        if (waitingList.getCapacity() == 0) {
+            waitingList.setCapacity(Integer.parseInt(env.getProperty("APP_DEFAULT_CAPACITY")));
+        }
+        if (waitingList.getAlgorithm() == null) {
+            waitingList.setAlgorithm(env.getProperty("APP_DEFAULT_ALGO"));
+        }
+
         return mapper.toResponseDTO(repository.save(waitingList));
 
     }
@@ -73,4 +83,5 @@ public class WaitingListServiceImpl extends GenericService<WaitingList> implemen
     public WaitingListResponseDTO read(Long id) {
         return mapper.toResponseDTO(repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Waiting list not found.")));
     }
+
 }

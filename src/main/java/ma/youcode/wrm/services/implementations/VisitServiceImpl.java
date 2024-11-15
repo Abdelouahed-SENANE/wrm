@@ -1,25 +1,33 @@
 package ma.youcode.wrm.services.implementations;
 
 import jakarta.persistence.EntityNotFoundException;
-import ma.youcode.wrm.common.GenericService;
+import ma.youcode.wrm.common.GenericServiceImpl;
+import ma.youcode.wrm.dto.request.visit.VisitCreateDTO;
 import ma.youcode.wrm.dto.request.visit.VisitUpdateDTO;
 import ma.youcode.wrm.dto.response.visit.VisitResponseDTO;
 import ma.youcode.wrm.entities.Visit;
+import ma.youcode.wrm.entities.Visitor;
+import ma.youcode.wrm.entities.WaitingList;
 import ma.youcode.wrm.mappers.VisitMapper;
 import ma.youcode.wrm.repositories.VisitRepository;
 import ma.youcode.wrm.services.interfaces.VisitService;
+import ma.youcode.wrm.services.interfaces.VisitorService;
+import ma.youcode.wrm.services.interfaces.WaitingListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 @Service
-public class VisitServiceImpl extends GenericService<Visit> implements VisitService {
+public class VisitServiceImpl extends GenericServiceImpl<Visit> implements VisitService {
 
     @Autowired
     private VisitRepository repository;
     @Autowired
     private VisitMapper mapper;
-
+    @Autowired
+    private WaitingListService waitingListService;
+    @Autowired
+    private VisitorService visitorService;
 
     public VisitServiceImpl(){
         super(Visit.class);
@@ -27,8 +35,18 @@ public class VisitServiceImpl extends GenericService<Visit> implements VisitServ
 
 
     @Override
-    public VisitResponseDTO create(VisitUpdateDTO requestDTO) {
-        return null;
+    public VisitResponseDTO create(VisitCreateDTO createDTO) {
+
+        WaitingList waitingList = findWaitingList(createDTO.waitingListId());
+        Visitor visitor = findVisitor(createDTO.visitorId());
+
+        Visit visit = toVisit(createDTO);
+        validateVisit(visit , waitingList);
+
+        visit.setVisitor(visitor);
+        visit.setWaitingList(waitingList);
+
+        return mapper.toResponseDTO(repository.save(visit));
     }
 
     @Override
@@ -52,4 +70,46 @@ public class VisitServiceImpl extends GenericService<Visit> implements VisitServ
         return null;
     }
 
+
+
+    private WaitingList findWaitingList(Long id) {
+        WaitingList waitingList = waitingListService.findById(id);
+
+        if (waitingList == null) {
+            throw new EntityNotFoundException("Waiting list not found.");
+        }
+
+        return waitingList;
+    }
+
+    private Visitor findVisitor(Long id) {
+        Visitor visitor = visitorService.findById(id);
+        if (visitor == null) {
+            throw new EntityNotFoundException("Visitor not found.");
+        }
+        return visitor;
+    }
+
+    private Visit toVisit(VisitCreateDTO createDTO) {
+        return mapper.fromCreateDTO(createDTO);
+    }
+
+    private void validateVisit(Visit visit, WaitingList waitingList) {
+        if (!"FIFO".equals(waitingList.getAlgorithm())) {
+            switch (waitingList.getAlgorithm()) {
+                case "PHF" :
+                    if (visit.getPriority() == 0) {
+                        throw new IllegalArgumentException("To apply the priority first algorithm, it's mandatory to have the priority value!");
+                    }
+                    break;
+                case "SJF" :
+                    if (visit.getEstimatedProcessingTime() == null) {
+                        throw new IllegalArgumentException("To apply algorithm SJF, it's mandatory to have the estimated processing time value!");
+                    }
+                    break;
+
+                default: throw new IllegalArgumentException("Algorithm not found.");
+            }
+        }
+    }
 }

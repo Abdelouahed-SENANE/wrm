@@ -2,6 +2,7 @@ package ma.youcode.wrm.controller;
 
 import jakarta.validation.Valid;
 import ma.youcode.wrm.dto.SuccessDTO;
+import ma.youcode.wrm.dto.request.visit.VisitCreateDTO;
 import ma.youcode.wrm.dto.request.visit.VisitUpdateDTO;
 import ma.youcode.wrm.dto.response.visit.VisitResponseDTO;
 import ma.youcode.wrm.services.implementations.VisitServiceImpl;
@@ -21,17 +22,17 @@ public class VisitController {
     @GetMapping("/{id}")
     public ResponseEntity<SuccessDTO> getVisit(@PathVariable Long id ) {
         VisitResponseDTO responseDTO = service.read(id);
-        return Response.success(200 , "Waiting list has been successfully retrieved." , "visit" , responseDTO);
+        return Response.success(200 , "Visit has been successfully retrieved." , "visit" , responseDTO);
     }
 
     @GetMapping("/all")
     public ResponseEntity<SuccessDTO> getAllVisits(@RequestParam(defaultValue = "0") int page , @RequestParam(defaultValue = "10") int size ) {
         Page<VisitResponseDTO> responseDTO = service.readAll(page , size);
-        return Response.success(200 , "All waiting list has been successfully retrieved." , "visits" , responseDTO);
+        return Response.success(200 , "All Visits has been successfully retrieved." , "visits" , responseDTO);
     }
 
     @PostMapping("/new")
-    public ResponseEntity<SuccessDTO> addNewVisit(@Valid @RequestBody VisitUpdateDTO requestDTO) {
+    public ResponseEntity<SuccessDTO> addNewVisit(@Valid @RequestBody VisitCreateDTO requestDTO) {
         VisitResponseDTO responseDTO = service.create(requestDTO);
         return Response.success(201 , "Visit has been successfully created." , "visit" , responseDTO);
     }

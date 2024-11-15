@@ -1,10 +1,11 @@
 spring:
+  profiles:
+    active: ${ACTIVE_PROFILE}
   application:
     name: WRM
   datasource:
-    url: jdbc:mysql://mysql:3306/wrm?useSSL=false&allowPublicKeyRetrieval=true
-    username: root
-    password: password
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
@@ -16,3 +17,30 @@ spring:
       enabled: true
     restart:
       enabled: true
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: ${DATABASE_URL}/prod_wrm_db
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: ${DATABASE_URL}/dev_wrm_db
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: uat
+  datasource:
+    url: ${DATABASE_URL}/uat_wrm_db

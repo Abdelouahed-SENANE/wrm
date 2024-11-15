@@ -8,12 +8,14 @@ import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public abstract class Response {
 
     public static ResponseEntity<SuccessDTO> success(int status, String message, String key, Page<?> items) {
-        Map<String, Object> payload = new HashMap<>();
+        Map<String, Object> payload = new LinkedHashMap<>();
+        payload.put(key, items.getContent());
 
         PageDTO pageDTO = new PageDTO(
                 items.getTotalElements(),
@@ -23,8 +25,8 @@ public abstract class Response {
                 items.hasPrevious(),
                 items.hasNext()
         );
-        payload.put(key, items.getContent());
         payload.put("pagination" , pageDTO);
+
         return ResponseEntity.status(status).body(new SuccessDTO(LocalDateTime.now() ,status, message, payload));
     }
 

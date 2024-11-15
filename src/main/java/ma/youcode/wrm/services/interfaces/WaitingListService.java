@@ -1,11 +1,13 @@
 package ma.youcode.wrm.services.interfaces;
 
+import ma.youcode.wrm.common.GenericService;
 import ma.youcode.wrm.dto.request.waitingList.WaitingListCreateDTO;
 import ma.youcode.wrm.dto.request.waitingList.WaitingListUpdateDTO;
 import ma.youcode.wrm.dto.response.waitingList.WaitingListResponseDTO;
+import ma.youcode.wrm.entities.WaitingList;
 import org.springframework.data.domain.Page;
 
-public interface WaitingListService {
+public interface WaitingListService extends GenericService<WaitingList> {
 
     WaitingListResponseDTO create(WaitingListCreateDTO requestDTO);
     WaitingListResponseDTO update(WaitingListUpdateDTO requestDTO , Long id);

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record WaitingListEmbeddedDTO(
         LocalDateTime date,
-        int capacity,
+        Integer capacity,
         String algorithm
 ) implements Serializable {
 

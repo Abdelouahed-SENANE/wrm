@@ -11,12 +11,12 @@ public record VisitCreateDTO(
         LocalTime arrivalTime,
         LocalTime startTime,
         LocalTime endTime,
-        LocalTime estimatedProcessedTime,
+        LocalTime estimatedProcessingTime,
         int priority,
         VisitStatus status,
-        Long visitorId,
-        Long waitingListId
+        @NotNull Long visitorId,
+        @NotNull Long waitingListId
 
 ) implements Serializable {
-
+        public VisitCreateDTO{status = VisitStatus.PENDING;}
 }

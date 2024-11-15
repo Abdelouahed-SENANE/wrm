@@ -8,8 +8,8 @@ public record VisitEmbeddedDTO(
         LocalTime arrivalTime,
         LocalTime startTime,
         LocalTime endTime,
-        LocalTime estimatedProcessedTime,
-        int priority,
+        LocalTime estimatedProcessingTime,
+        Integer priority,
         VisitStatus status
 ) {
 }

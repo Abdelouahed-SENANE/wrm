@@ -11,7 +11,7 @@ public record VisitUpdateDTO(
         LocalTime arrivalTime,
         LocalTime startTime,
         LocalTime endTime,
-        LocalTime estimatedProcessedTime,
+        LocalTime estimatedProcessingTime,
         int priority,
         VisitStatus status,
         Long visitorId,

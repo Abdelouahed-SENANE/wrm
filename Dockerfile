@@ -4,7 +4,9 @@ FROM openjdk:17-jdk-slim
 # Set the working directory in the container
 WORKDIR /app
 
-COPY target/*.jar wrm.jar
+COPY target/wrm-0.0.1-SNAPSHOT.jar wrm.jar
+COPY .env .env
+
 # Expose the port that the application will run on
 EXPOSE 8080
 
