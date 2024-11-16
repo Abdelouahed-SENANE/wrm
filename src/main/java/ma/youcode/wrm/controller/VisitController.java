@@ -7,6 +7,8 @@ import ma.youcode.wrm.dto.request.visit.VisitEditDTO;
 import ma.youcode.wrm.dto.request.visit.VisitUpdateDTO;
 import ma.youcode.wrm.dto.response.visit.VisitResponseDTO;
 import ma.youcode.wrm.services.implementations.VisitServiceImpl;
+import ma.youcode.wrm.services.interfaces.VisitService;
+import ma.youcode.wrm.services.interfaces.VisitorService;
 import ma.youcode.wrm.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class VisitController {
 
     @Autowired
-    private VisitServiceImpl service;
+    private VisitService service;
 
     @GetMapping("/{id}")
     public ResponseEntity<SuccessDTO> getVisit(@PathVariable Long id ) {

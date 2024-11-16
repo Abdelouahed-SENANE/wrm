@@ -8,6 +8,7 @@ import lombok.Setter;
 import ma.youcode.wrm.common.BaseEntity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,6 +29,6 @@ public class WaitingList extends BaseEntity {
     private String algorithm;
 
     @OneToMany(mappedBy = "waitingList" , fetch = FetchType.EAGER)
-    private List<Visit> visits;
+    private List<Visit> visits = new ArrayList<>();
 
 }

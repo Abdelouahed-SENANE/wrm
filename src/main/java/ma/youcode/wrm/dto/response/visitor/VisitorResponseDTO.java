@@ -1,5 +1,6 @@
 package ma.youcode.wrm.dto.response.visitor;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import ma.youcode.wrm.dto.response.visit.VisitEmbeddedDTO;
 import ma.youcode.wrm.dto.response.waitingList.WaitingListEmbeddedDTO;
 import ma.youcode.wrm.entities.Visit;

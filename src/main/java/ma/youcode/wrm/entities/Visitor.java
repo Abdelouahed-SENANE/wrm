@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ma.youcode.wrm.common.BaseEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -24,7 +25,7 @@ public class Visitor extends BaseEntity {
     private String lastName;
 
     @OneToMany(mappedBy = "visitor" , fetch = FetchType.EAGER)
-    private List<Visit> visits;
+    private List<Visit> visits = new ArrayList<>();
 
 
 }
