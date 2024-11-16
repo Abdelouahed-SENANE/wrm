@@ -25,6 +25,11 @@ public class WaitingListController {
         WaitingListResponseDTO responseDTO = service.read(id);
         return Response.success(200 , "waiting list has been successfully retrieved." , "waiting-list" , responseDTO);
     }
+    @GetMapping("/{id}/sorted")
+    public ResponseEntity<SuccessDTO> getWaitingListWithSorted(@PathVariable Long id) {
+        WaitingListResponseDTO responseDTO = service.readWithSortedVisits(id);
+        return Response.success(200 , "sorted waiting list has been successfully retrieved." , "waiting-list" , responseDTO);
+    }
     @GetMapping("/all")
     public ResponseEntity<SuccessDTO> getAllWaitingList(@RequestParam(defaultValue = "0") int page , @RequestParam(defaultValue = "10") int size) {
 
@@ -32,6 +37,12 @@ public class WaitingListController {
         return Response.success(200 , "All waiting list has been successfully retrieved." , "waiting-lists" , responseDTO);
     }
 
+    @GetMapping("/all/sorted")
+    public ResponseEntity<SuccessDTO> getAllWithSortedVisits(@RequestParam(defaultValue = "0") int page , @RequestParam(defaultValue = "10") int size) {
+
+        Page<WaitingListResponseDTO> responseDTO = service.readAllWithSortedVisits(page, size);
+        return Response.success(200 , "All sorted waiting list has been successfully retrieved." , "waiting-lists" , responseDTO);
+    }
     @PostMapping("/new")
     public ResponseEntity<SuccessDTO> addNewWaitingList(@Valid @RequestBody WaitingListCreateDTO requestDTO) {
         WaitingListResponseDTO responseDTO = service.create(requestDTO);

@@ -3,6 +3,7 @@ package ma.youcode.wrm.services.implementations;
 import jakarta.persistence.EntityNotFoundException;
 import ma.youcode.wrm.common.GenericServiceImpl;
 import ma.youcode.wrm.dto.request.visit.VisitCreateDTO;
+import ma.youcode.wrm.dto.request.visit.VisitEditDTO;
 import ma.youcode.wrm.dto.request.visit.VisitUpdateDTO;
 import ma.youcode.wrm.dto.response.visit.VisitResponseDTO;
 import ma.youcode.wrm.dto.response.visitor.VisitorResponseDTO;
@@ -19,6 +20,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Service
 public class VisitServiceImpl extends GenericServiceImpl<Visit> implements VisitService {
@@ -78,6 +82,21 @@ public class VisitServiceImpl extends GenericServiceImpl<Visit> implements Visit
         return saveVisit(visit);
     }
 
+    @Override
+    public VisitResponseDTO edit(VisitEditDTO editDTO, Long id) {
+
+        Visit visit = repository.findById(id)
+                .orElseThrow(() ->new EntityNotFoundException("Visit not found."));
+
+        if (editDTO.endTime() != null){
+            visit.setEndTime(editDTO.endTime());
+        }
+        if (editDTO.startTime() != null){
+            visit.setStartTime(editDTO.startTime());
+        }
+
+        return mapper.toResponseDTO(repository.save(visit));
+    }
 
     @Override
     public VisitResponseDTO read(Long id) {

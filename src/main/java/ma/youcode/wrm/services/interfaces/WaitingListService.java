@@ -14,4 +14,7 @@ public interface WaitingListService extends GenericService<WaitingList> {
     void delete(Long id);
     WaitingListResponseDTO read(Long id);
     Page<WaitingListResponseDTO> readAll(int page , int size);
+    Page<WaitingListResponseDTO> readAllWithSortedVisits(int page , int size );
+    WaitingListResponseDTO readWithSortedVisits(Long id );
+
 }

@@ -3,6 +3,7 @@ package ma.youcode.wrm.controller;
 import jakarta.validation.Valid;
 import ma.youcode.wrm.dto.SuccessDTO;
 import ma.youcode.wrm.dto.request.visit.VisitCreateDTO;
+import ma.youcode.wrm.dto.request.visit.VisitEditDTO;
 import ma.youcode.wrm.dto.request.visit.VisitUpdateDTO;
 import ma.youcode.wrm.dto.response.visit.VisitResponseDTO;
 import ma.youcode.wrm.services.implementations.VisitServiceImpl;
@@ -36,10 +37,18 @@ public class VisitController {
         VisitResponseDTO responseDTO = service.create(requestDTO);
         return Response.success(201 , "Visit has been successfully created." , "visit" , responseDTO);
     }
-    @PutMapping("/edit/{id}")
-    public ResponseEntity<SuccessDTO> editVisit(@Valid @RequestBody VisitUpdateDTO requestDTO , @PathVariable Long id) {
+    @PutMapping("/update/{id}")
+    public ResponseEntity<SuccessDTO> updateVisit(@Valid @RequestBody VisitUpdateDTO requestDTO , @PathVariable Long id) {
         VisitResponseDTO responseDTO = service.update(requestDTO , id);
         return Response.success(200 , "Visit has been successfully updated." , "visit" , responseDTO);
+    }
+    @PatchMapping("/edit/{id}")
+    public ResponseEntity<SuccessDTO> editVisit(@RequestBody VisitEditDTO editDTO , @PathVariable Long id) {
+        VisitResponseDTO responseDTO = service.edit(editDTO , id);
+        if (editDTO.startTime() != null) {
+            return Response.success(200 , "Visit start time has been successfully edited." , "visit" , responseDTO);
+        }
+        return Response.success(200 , "Visit end time has been successfully edited." , "visit" , responseDTO);
     }
 
     @DeleteMapping("/delete/{id}")

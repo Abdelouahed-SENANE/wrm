@@ -84,4 +84,19 @@ public class WaitingListServiceImpl extends GenericServiceImpl<WaitingList> impl
         return mapper.toResponseDTO(repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Waiting list not found.")));
     }
 
+    @Override
+    public Page<WaitingListResponseDTO> readAllWithSortedVisits(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<WaitingList> waitingLists = repository.findAllWithSortedVisits(pageable);
+        return waitingLists.map(mapper::toResponseDTO);
+    }
+
+    @Override
+    public WaitingListResponseDTO readWithSortedVisits(Long id) {
+        if (!isExist(id)) {
+            throw new EntityNotFoundException("Waiting list not found.");
+        }
+
+        return mapper.toResponseDTO(repository.findWithSortedVisits(id));
+    }
 }

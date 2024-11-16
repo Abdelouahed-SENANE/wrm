@@ -23,4 +23,5 @@ public interface VisitMapper extends BaseMapper<Visit, VisitResponseDTO, VisitEm
     @Mapping(target = "id", ignore = true)
     @Override
     Visit fromUpdateDTO(VisitUpdateDTO dto);
+
 }
