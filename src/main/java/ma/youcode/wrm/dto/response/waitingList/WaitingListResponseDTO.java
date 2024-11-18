@@ -9,6 +9,7 @@ import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record WaitingListResponseDTO(
+        Long id,
         LocalDateTime date,
         Integer capacity,
         String algorithm,

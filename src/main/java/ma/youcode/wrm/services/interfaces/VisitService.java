@@ -6,6 +6,7 @@ import ma.youcode.wrm.dto.request.visit.VisitEditDTO;
 import ma.youcode.wrm.dto.request.visit.VisitUpdateDTO;
 import ma.youcode.wrm.dto.response.visit.VisitResponseDTO;
 import ma.youcode.wrm.entities.Visit;
+import ma.youcode.wrm.enums.VisitStatus;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
@@ -18,5 +19,5 @@ public interface VisitService extends GenericService<Visit> {
     VisitResponseDTO read(Long id);
     Page<VisitResponseDTO> readAll(int page , int size);
     VisitResponseDTO edit(VisitEditDTO editDTO , Long id);
-
+    VisitResponseDTO modifyStatus(VisitEditDTO editDTO , Long id);
 }

@@ -10,6 +10,7 @@ import ma.youcode.wrm.dto.response.visitor.VisitorResponseDTO;
 import ma.youcode.wrm.entities.Visit;
 import ma.youcode.wrm.entities.Visitor;
 import ma.youcode.wrm.entities.WaitingList;
+import ma.youcode.wrm.enums.VisitStatus;
 import ma.youcode.wrm.mappers.VisitMapper;
 import ma.youcode.wrm.repositories.VisitRepository;
 import ma.youcode.wrm.services.interfaces.VisitService;
@@ -47,6 +48,10 @@ public class VisitServiceImpl extends GenericServiceImpl<Visit> implements Visit
         WaitingList waitingList = findWaitingList(createDTO.waitingListId());
         Visitor visitor = findVisitor(createDTO.visitorId());
 
+        if (waitingList.getCapacity() < waitingList.getVisits().size()) {
+            throw new IllegalArgumentException("The given waiting list does not have enough capacity");
+        }
+
         Visit visit = mapper.fromCreateDTO(createDTO);
         validateVisit(visit, waitingList);
 
@@ -70,7 +75,7 @@ public class VisitServiceImpl extends GenericServiceImpl<Visit> implements Visit
     public VisitResponseDTO update(VisitUpdateDTO updateDTO, Long id) {
 
         if (!isExist(id)) {
-           throw new EntityNotFoundException("Visit not found.");
+            throw new EntityNotFoundException("Visit not found.");
         }
 
         WaitingList waitingList = findWaitingList(updateDTO.waitingListId());
@@ -89,9 +94,12 @@ public class VisitServiceImpl extends GenericServiceImpl<Visit> implements Visit
                 .orElseThrow(() ->new EntityNotFoundException("Visit not found."));
 
         if (editDTO.endTime() != null){
+
+            visit.setStatus(VisitStatus.COMPLETED);
             visit.setEndTime(editDTO.endTime());
         }
         if (editDTO.startTime() != null){
+            visit.setStatus(VisitStatus.IN_PROGRESS);
             visit.setStartTime(editDTO.startTime());
         }
 
@@ -147,6 +155,17 @@ public class VisitServiceImpl extends GenericServiceImpl<Visit> implements Visit
             }
         }
     }
+
+    @Override
+    public VisitResponseDTO modifyStatus(VisitEditDTO editDTO, Long id) {
+        Visit visit = repository.findById(id)
+                .orElseThrow(() ->new EntityNotFoundException("Visit not found."));
+        visit.setStatus(editDTO.status());
+
+        return mapper.toResponseDTO(repository.save(visit));
+    }
+
+
 
     private VisitResponseDTO saveVisit(Visit visit) {
         return mapper.toResponseDTO(repository.save(visit));

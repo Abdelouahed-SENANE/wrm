@@ -3,23 +3,25 @@ spring:
     active: ${ACTIVE_PROFILE}
   application:
     name: WRM
+
   datasource:
     username: ${DATABASE_USERNAME}
     password: ${DATABASE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 30000
+      maximum-pool-size: 10
+
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
     open-in-view: false
-  devtools:
-    livereload:
-      enabled: true
-    restart:
-      enabled: true
+
 
 
 ---
+
 spring:
   config:
     activate:
@@ -35,12 +37,43 @@ spring:
       on-profile: dev
   datasource:
     url: ${DATABASE_URL}/dev_wrm_db
+  server:
+    port: 8081
 
 
 ---
+
 spring:
   config:
     activate:
       on-profile: uat
   datasource:
     url: ${DATABASE_URL}/uat_wrm_db
+
+
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: sit
+
+  datasource:
+    url: jdbc:h2:mem:sit_wrm_db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password: password
+    driver-class-name: org.h2.Driver
+    hikari:
+      connection-timeout: 30000
+      maximum-pool-size: 10
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    database-platform: org.hibernate.dialect.H2Dialect
+    properties:
+      temp:
+        use_jdbc_metadata_defaults: false
+

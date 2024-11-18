@@ -1,10 +1,11 @@
 package ma.youcode.wrm.controller;
 
 import jakarta.validation.Valid;
-import ma.youcode.wrm.dto.request.waitingList.WaitingListCreateDTO;
 import ma.youcode.wrm.dto.SuccessDTO;
+import ma.youcode.wrm.dto.request.waitingList.WaitingListCreateDTO;
 import ma.youcode.wrm.dto.request.waitingList.WaitingListUpdateDTO;
 import ma.youcode.wrm.dto.response.waitingList.WaitingListResponseDTO;
+import ma.youcode.wrm.dto.response.waitingList.WaitingListStatisticsDTO;
 import ma.youcode.wrm.services.interfaces.WaitingListService;
 import ma.youcode.wrm.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,6 @@ public class WaitingListController {
 
     @GetMapping("/all/sorted")
     public ResponseEntity<SuccessDTO> getAllWithSortedVisits(@RequestParam(defaultValue = "0") int page , @RequestParam(defaultValue = "10") int size) {
-
         Page<WaitingListResponseDTO> responseDTO = service.readAllWithSortedVisits(page, size);
         return Response.success(200 , "All sorted waiting list has been successfully retrieved." , "waiting-lists" , responseDTO);
     }
@@ -58,6 +58,12 @@ public class WaitingListController {
     public ResponseEntity<SuccessDTO> deleteWaitingList(@PathVariable Long id) {
         service.delete(id);
         return Response.success(200 , "Waiting list has been successfully deleted.");
+    }
+
+    @GetMapping("/{id}/statistics")
+    public ResponseEntity<SuccessDTO> getStatistics(@PathVariable Long id) {
+        WaitingListStatisticsDTO responseDTO = service.readStatistics(id);
+        return Response.success(200 , "Statistics of waiting list has been successfully retrieved." , "statistics" , responseDTO);
     }
 
 

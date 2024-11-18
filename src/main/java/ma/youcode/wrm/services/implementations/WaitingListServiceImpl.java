@@ -4,10 +4,13 @@ import jakarta.persistence.EntityNotFoundException;
 import ma.youcode.wrm.common.GenericServiceImpl;
 import ma.youcode.wrm.dto.request.waitingList.WaitingListCreateDTO;
 import ma.youcode.wrm.dto.request.waitingList.WaitingListUpdateDTO;
+import ma.youcode.wrm.dto.response.waitingList.WaitingListStatisticsDTO;
 import ma.youcode.wrm.dto.response.waitingList.WaitingListResponseDTO;
 import ma.youcode.wrm.entities.WaitingList;
 import ma.youcode.wrm.mappers.WaitingListMapper;
+import ma.youcode.wrm.repositories.VisitRepository;
 import ma.youcode.wrm.repositories.WaitingListRepository;
+import ma.youcode.wrm.services.interfaces.VisitService;
 import ma.youcode.wrm.services.interfaces.WaitingListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -23,7 +26,8 @@ public class WaitingListServiceImpl extends GenericServiceImpl<WaitingList> impl
     private WaitingListMapper mapper;
     @Autowired
     private WaitingListRepository repository;
-
+    @Autowired
+    private VisitRepository visitRepository;
     @Autowired
     private Environment env;
 
@@ -98,5 +102,28 @@ public class WaitingListServiceImpl extends GenericServiceImpl<WaitingList> impl
         }
 
         return mapper.toResponseDTO(repository.findWithSortedVisits(id));
+    }
+
+    @Override
+    public WaitingListStatisticsDTO readStatistics(Long id) {
+        WaitingList waitingList = findById(id);
+
+        if (waitingList == null) {
+            throw new EntityNotFoundException("Waiting list not found.");
+        }
+
+        Double turnoverRate = visitRepository.calculateTurnoverRateOfWaitingList(id);
+        Double averageWaitingTime = visitRepository.calculateAverageWaitingTimeOfWaitingList(id);
+        Double satisfactionRate = visitRepository.calculateSatisfactionRateOfWaitingList(id);
+        if (averageWaitingTime == null) {
+            averageWaitingTime = 0.0;
+        }
+        if (turnoverRate == null) {
+            turnoverRate = 0.0;
+        }
+        if (satisfactionRate == null) {
+            satisfactionRate = 0.0;
+        }
+        return new WaitingListStatisticsDTO(waitingList.getId() , waitingList.getDate() ,turnoverRate , averageWaitingTime , satisfactionRate);
     }
 }

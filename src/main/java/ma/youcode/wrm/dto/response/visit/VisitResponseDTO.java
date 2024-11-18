@@ -19,26 +19,26 @@ public record VisitResponseDTO(
         VisitorEmbeddedDTO visitor
 
 ) {
-    public VisitResponseDTO(
-            LocalTime arrivalTime,
-            LocalTime startTime,
-            LocalTime endTime,
-            LocalTime estimatedProcessingTime,
-            Integer priority,
-            VisitStatus status,
-            WaitingListEmbeddedDTO waitingList,
-            VisitorEmbeddedDTO visitor
-    ) {
-        this(
-                arrivalTime,
-                startTime,
-                endTime,
-                estimatedProcessingTime,
-                priority,
-                status.getDesc(),
-                waitingList,
-                visitor
-        );
-    }
+//    public VisitResponseDTO(
+//            LocalTime arrivalTime,
+//            LocalTime startTime,
+//            LocalTime endTime,
+//            LocalTime estimatedProcessingTime,
+//            Integer priority,
+//            VisitStatus status,
+//            WaitingListEmbeddedDTO waitingList,
+//            VisitorEmbeddedDTO visitor
+//    ) {
+//        this(
+//                arrivalTime,
+//                startTime,
+//                endTime,
+//                estimatedProcessingTime,
+//                priority,
+//                status.getDisplayName(),
+//                waitingList,
+//                visitor
+//        );
+//    }
 
 }

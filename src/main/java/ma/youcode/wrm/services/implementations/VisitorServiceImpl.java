@@ -15,8 +15,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-
 @Service
 public class VisitorServiceImpl extends GenericServiceImpl<Visitor> implements VisitorService {
 
@@ -51,7 +49,6 @@ public class VisitorServiceImpl extends GenericServiceImpl<Visitor> implements V
         if (!isExist(id)) {
             throw new EntityNotFoundException("Visit not found.");
         }
-
 
         Visitor updatedVisitor = mapper.fromUpdateDTO(updateDTO);
         updatedVisitor.setId(id);
