@@ -16,7 +16,6 @@ public abstract class Response {
     public static ResponseEntity<SuccessDTO> success(int status, String message, String key, Page<?> items) {
         Map<String, Object> payload = new LinkedHashMap<>();
         payload.put(key, items.getContent());
-
         PageDTO pageDTO = new PageDTO(
                 items.getTotalElements(),
                 items.getTotalPages(),
